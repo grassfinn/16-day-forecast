@@ -1,10 +1,15 @@
 // https://rapidapi.com/weatherbit/api/weather/
 //https://github.com/browserify/browserify
 // https://www.weatherbit.io/api/weather-forecast-16-day
-const currentDay = document.getElementById('current-day');
-const currentWeather = document.getElementById('current-weather');
-const currentTemp = document.getElementById('current-temp');
-const currentWind = document.getElementById('current-wind');
+// https://day.js.org/en/
+
+
+const dayjs = require('dayjs')
+const calendar = require('dayjs/plugin/calendar')
+
+//import dayjs from 'dayjs' // ES 2015
+const dateToString = dayjs('2022-07-20').toString()
+console.log(dateToString.substring(0,3))
 const axios = require('axios');
 
 const options = {
@@ -17,33 +22,36 @@ const options = {
   },
 };
 
-async function TestData() {
-  const response = await fetch('testData.json');
-  const data = await response.json();
-  console.log(data);
-  return data;
-}
+// async function TestData() {
+//   const response = await fetch('testData.json');
+//   const data = await response.json();
+//   console.log(data);
+//   return data;
+// }
 
-TestData().then((response) => {
-  return (document.querySelector('main').innerHTML = displayData(response));
-});
-// // call 1
-// axios
-//   .request(options)
-//   .then(function (response) {
-//     let sixteenDayForecast = response.data.data;
-//     console.log(response.data.data);
-//     document.querySelector('main').innerHTML = displayData(sixteenDayForecast);
-//   })
-//   .catch(function (error) {
-//     console.error(error);
-//   });
+// TestData().then((response) => {
+//   return (document.querySelector('main').innerHTML = displayData(response));
+// });
+// call 1
+axios
+  .request(options)
+  .then(function (response) {
+    let sixteenDayForecast = response.data.data;
+    console.log(response.data.data);
+    document.querySelector('main').innerHTML = displayData(sixteenDayForecast);
+  })
+  .catch(function (error) {
+    console.error(error);
+  });
 
 // get data html for one day
 function getDataHtml(day) {
+  let dateToString = (dayjs(day.datetime)).toString()
+  let currentDate = day.datetime
   // map through the array and create the HTML needed
   return ` <div class="single-day-forecast">
-          <div class="day"><h2>${day.datetime}</h2> </div>
+          <div class="day"><h2>${dateToString.substring(0,3)}</h2> </div>
+          <div class=""><h3>${currentDate.substring(5)}</h3></div>
           <div class="icon"><img src="https://www.weatherbit.io/static/img/icons/${
             day.weather.icon
           }.png"></div>
@@ -78,6 +86,7 @@ const date = new Date();
 // precip
 //  weather icon
 // weather desc
-
+const day = date.getDay()
+console.log(day)
 currentDay.textContent = `${date.toDateString()}`;
 // display data
