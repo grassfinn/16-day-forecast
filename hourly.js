@@ -2,12 +2,29 @@
 //https://github.com/browserify/browserify
 // https://www.weatherbit.io/api/weather-forecast-16-day
 // https://day.js.org/en/
+// browserfy
 const axios = require('axios');
 
 const dayjs = require('dayjs');
 const calendar = require('dayjs/plugin/calendar');
 const date = new Date();
 const day = date.getDay();
+
+let lat = null;
+let long = null;
+
+const sucessCallback = (position) => {
+  console.log(position.coords);
+  lat = position.coords.latitude;
+  long = position.coords.longitude;
+  console.log(lat, long);
+};
+
+const errorCallback = (error) => {
+  console.log(error);
+};
+
+navigator.geolocation.getCurrentPosition(sucessCallback, errorCallback);
 
 //import dayjs from 'dayjs' // ES 2015
 // const dateToString = dayjs('2022-07-20').toString()
@@ -28,7 +45,7 @@ const day = date.getDay();
 const options = {
   method: 'GET',
   url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/hourly',
-  params: { lat: '31.15', lon: '-81.36' },
+  params: { lat: lat, lon: long },
   headers: {
     'X-RapidAPI-Key': '51e6d9c0admsh04df8c92ea0b8b7p1714c9jsnffa47057296b',
     'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com',

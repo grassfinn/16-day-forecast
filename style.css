@@ -1,43 +1,40 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    text-align: center;
-    background-color: aliceblue;
+  text-align: center;
+  background-color: aliceblue;
 }
 
 li {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 .sixteen-day-forecast {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    margin: 0 auto;
-    gap: 1em;
-    max-width: 80%;
-    justify-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  margin: 0 auto;
+  gap: 1em;
+  max-width: 80%;
+  justify-items: center;
 }
 
-
-
-
 .single-day-forecast {
-    padding: 2em;
-    background-color: lightblue;
-    border-radius: 25px;
-    max-width: 340px;
+  padding: 2em;
+  background-color: lightblue;
+  border-radius: 25px;
+  max-width: 340px;
 }
 
 #current-day {
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 2em; 
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2em;
 }
 
 #current-day:first-child {
-    background-color: aquamarine;
+  background-color: aquamarine;
 }

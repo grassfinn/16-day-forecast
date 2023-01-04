@@ -4,6 +4,7 @@
 // https://day.js.org/en/
 
 const today = document.getElementById('current-day');
+
 const dayjs = require('dayjs');
 const calendar = require('dayjs/plugin/calendar');
 
@@ -12,15 +13,75 @@ const dateToString = dayjs('2022-07-20').toString();
 console.log(dateToString.substring(0, 3));
 const axios = require('axios');
 
-const options = {
-  method: 'GET',
-  url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/daily',
-  params: { lat: '31.15', lon: '-81.36' },
-  headers: {
-    'X-RapidAPI-Key': '51e6d9c0admsh04df8c92ea0b8b7p1714c9jsnffa47057296b',
-    'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com',
-  },
+// ask for permission
+// set lat and long based on the success
+let lat = null;
+let long = null;
+
+const successCallback = (position) => {
+  const city = document.querySelector('.city');
+  const options = {
+    method: 'GET',
+    url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/daily',
+    params: { lat: position.coords.latitude, lon: position.coords.longitude },
+    headers: {
+      'X-RapidAPI-Key': '51e6d9c0admsh04df8c92ea0b8b7p1714c9jsnffa47057296b',
+      'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com',
+    },
+  };
+  console.log(options);
+
+  axios
+    .request(options)
+    .then(function (response) {
+      let sixteenDayForecast = response.data.data;
+      const todaysForecast = sixteenDayForecast[0];
+      city.textContent = response.data.city_name;
+      today.innerHTML = getDataHtml(todaysForecast);
+
+      sixteenDayForecast.shift();
+      console.log(sixteenDayForecast);
+      document.querySelector('main').innerHTML =
+        displayData(sixteenDayForecast);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
 };
+
+const errorCallback = (error) => {
+  console.log(error);
+  const city = document.querySelector('.city');
+  const options = {
+    method: 'GET',
+    url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/daily',
+    params: { lat: 40.71427, lon: -74.00597 },
+    headers: {
+      'X-RapidAPI-Key': '51e6d9c0admsh04df8c92ea0b8b7p1714c9jsnffa47057296b',
+      'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com',
+    },
+  };
+  console.log(options);
+
+  axios
+    .request(options)
+    .then(function (response) {
+      let sixteenDayForecast = response.data.data;
+      const todaysForecast = sixteenDayForecast[0];
+      city.textContent = response.data.city_name;
+      today.innerHTML = getDataHtml(todaysForecast);
+
+      sixteenDayForecast.shift();
+      console.log(sixteenDayForecast);
+      document.querySelector('main').innerHTML =
+        displayData(sixteenDayForecast);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+};
+
+navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
 // async function TestData() {
 //   const response = await fetch('testData.json');
@@ -35,20 +96,6 @@ const options = {
 //   document.querySelector('main').innerHTML = displayData(sixteenDayForecast);
 // });
 // call 1
-axios
-  .request(options)
-  .then(function (response) {
-    let sixteenDayForecast = response.data.data;
-    const todaysForecast = sixteenDayForecast[0];
-    today.innerHTML = getDataHtml(todaysForecast);
-
-    sixteenDayForecast.shift();
-    console.log(sixteenDayForecast);
-    document.querySelector('main').innerHTML = displayData(sixteenDayForecast);
-  })
-  .catch(function (error) {
-    console.error(error);
-  });
 
 // get data html for one day
 function getDataHtml(day) {
