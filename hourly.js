@@ -13,18 +13,60 @@ const day = date.getDay();
 let lat = null;
 let long = null;
 
-const sucessCallback = (position) => {
-  console.log(position.coords);
-  lat = position.coords.latitude;
-  long = position.coords.longitude;
-  console.log(lat, long);
+const successCallback = (position) => {
+  const city = document.querySelector('.city');
+  const options = {
+    method: 'GET',
+    url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/hourly',
+    params: { lat: position.coords.latitude, lon: position.coords.longitude },
+    headers: {
+      'X-RapidAPI-Key': '51e6d9c0admsh04df8c92ea0b8b7p1714c9jsnffa47057296b',
+      'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com',
+    },
+  };
+  console.log(options);
+
+  axios
+    .request(options)
+    .then(function (response) {
+      let forecast = response.data.data;
+      city.textContent = response.data.city_name;
+
+      document.querySelector('main').innerHTML = displayData(forecast);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
 };
 
 const errorCallback = (error) => {
   console.log(error);
+  const city = document.querySelector('.city');
+  const options = {
+    method: 'GET',
+    url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/hourly',
+    params: { lat: 40.71427, lon: -74.00597 },
+    headers: {
+      'X-RapidAPI-Key': '51e6d9c0admsh04df8c92ea0b8b7p1714c9jsnffa47057296b',
+      'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com',
+    },
+  };
+  console.log(options);
+
+  axios
+    .request(options)
+    .then(function (response) {
+      let forecast = response.data.data;
+      city.textContent = response.data.city_name;
+
+      document.querySelector('main').innerHTML = displayData(forecast);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
 };
 
-navigator.geolocation.getCurrentPosition(sucessCallback, errorCallback);
+navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
 //import dayjs from 'dayjs' // ES 2015
 // const dateToString = dayjs('2022-07-20').toString()
@@ -42,27 +84,6 @@ navigator.geolocation.getCurrentPosition(sucessCallback, errorCallback);
 // });
 
 // call 1
-const options = {
-  method: 'GET',
-  url: 'https://weatherbit-v1-mashape.p.rapidapi.com/forecast/hourly',
-  params: { lat: lat, lon: long },
-  headers: {
-    'X-RapidAPI-Key': '51e6d9c0admsh04df8c92ea0b8b7p1714c9jsnffa47057296b',
-    'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com',
-  },
-};
-
-axios
-  .request(options)
-  .then(function (response) {
-    console.log(response);
-    let forecast = response.data.data;
-    console.log(response.data.data);
-    document.querySelector('main').innerHTML = displayData(forecast);
-  })
-  .catch(function (error) {
-    console.error(error);
-  });
 
 // get data html for one day
 function getDataHtml(day) {
